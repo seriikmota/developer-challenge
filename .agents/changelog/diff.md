@@ -170,3 +170,44 @@ One block per agent turn, one row per changed file:
 | `docs/adr/002-versions-and-history.md` | created | +59 | -0 |
 | `docs/adr/005-layered-architecture.md` | modified | +1 | -1 |
 | `docs/adr/README.md` | modified | +1 | -1 |
+
+---
+### Turn 2026-11-18 10:04:08 -0300 · ClaudeCode
+- **Source**: command
+- **Session**: n/a
+- **Prompt**: n/a
+- **Summary**: Phase 4: JWT auth (register, login, me) with BCrypt, RequestIdFilter, ProblemDetail advice for all errors, public health and Swagger, ArchUnit rule for application layer, integration tests
+
+| File | Change | Additions | Removals |
+|---|---|---|---|
+| `.env.example` | modified | +6 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/auth/AccessToken.java` | created | +7 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/auth/AccessTokenIssuer.java` | created | +12 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/auth/AuthService.java` | created | +92 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/error/ApplicationException.java` | created | +22 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/error/AuthenticationFailedException.java` | created | +12 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/error/ConflictException.java` | created | +13 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/error/ForbiddenException.java` | created | +12 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/error/InvalidInputException.java` | created | +28 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/error/NotFoundException.java` | created | +12 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/config/ClockConfig.java` | created | +20 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/security/CurrentActorResolver.java` | created | +41 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/security/JwtAccessTokenIssuer.java` | created | +55 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/security/JwtClaimNames.java` | created | +17 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/security/JwtConfig.java` | created | +70 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/security/JwtProperties.java` | created | +24 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/security/ProblemSecurityHandler.java` | created | +34 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/security/SecurityConfig.java` | created | +66 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/web/OpenApiConfig.java` | created | +36 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/web/RequestIdFilter.java` | created | +61 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/web/WebConfig.java` | created | +19 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/web/auth/AuthController.java` | created | +87 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/web/error/ProblemDetailAdvice.java` | created | +164 | -0 |
+| `backend/src/main/resources/application.yml` | modified | +15 | -1 |
+| `backend/src/test/java/dev/challenge/purchase/IntegrationTest.java` | created | +25 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/PurchaseRequestsApplicationTests.java` | modified | +1 | -4 |
+| `backend/src/test/java/dev/challenge/purchase/architecture/DomainArchitectureTest.java` | modified | +6 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/persistence/PersistenceIntegrationTest.java` | modified | +2 | -5 |
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/web/auth/AuthApiTest.java` | created | +265 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/web/error/ErrorProbeController.java` | created | +34 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/web/error/ProblemDetailAdviceTest.java` | created | +59 | -0 |
