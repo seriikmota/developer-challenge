@@ -31,4 +31,10 @@ class DomainArchitectureTest {
 			.should().dependOnClassesThat().resideInAnyPackage("..application..", "..infrastructure..")
 			.because("dependencies point inwards: infrastructure -> application -> domain");
 
+	@ArchTest
+	static final ArchRule applicationDoesNotDependOnWebOrSecurity = noClasses()
+			.that().resideInAPackage("..application..")
+			.should().dependOnClassesThat().resideInAnyPackage("..infrastructure.web..", "..infrastructure.security..", "jakarta.servlet..")
+			.because("use cases do not know about HTTP or token formats; only persistence is used directly (ADR 005)");
+
 }

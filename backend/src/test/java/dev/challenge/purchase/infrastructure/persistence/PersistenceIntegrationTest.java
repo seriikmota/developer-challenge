@@ -5,12 +5,10 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-import dev.challenge.purchase.TestcontainersConfiguration;
+import dev.challenge.purchase.IntegrationTest;
 import dev.challenge.purchase.domain.budget.Money;
 import dev.challenge.purchase.domain.request.Category;
 import dev.challenge.purchase.domain.request.LineItem;
@@ -28,8 +26,7 @@ import jakarta.persistence.EntityManager;
  * Base of the persistence tests: real PostgreSQL (Testcontainers) with the Flyway schema, one shared Spring context,
  * and a transaction rolled back after each test.
  */
-@SpringBootTest
-@Import(TestcontainersConfiguration.class)
+@IntegrationTest
 @Transactional
 public abstract class PersistenceIntegrationTest {
 
