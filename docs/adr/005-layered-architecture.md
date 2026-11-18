@@ -25,7 +25,7 @@ infrastructure  ->  application  ->  domain
   - `budget/Money` e `budget/CompetenceMonth`: value objects;
   - `error/DomainException` + `ErrorCode`: violações de regra (`422`) com mensagem que explica o motivo.
 - **`application`**: casos de uso transacionais. Orquestram as regras do domínio, a persistência e o histórico.
-- **`infrastructure`**: controllers, DTOs, entidades JPA, repositórios e segurança.
+- **`infrastructure`**: controllers, DTOs, entidades JPA, repositórios e segurança. Exceção deliberada da versão leve: os casos de uso usam diretamente as entidades e os repositórios de `infrastructure.persistence`, sem interfaces de porta; `web` e `security` continuam fora do alcance da `application`.
 
 Regras de projeto:
 
