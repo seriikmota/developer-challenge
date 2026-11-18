@@ -58,6 +58,11 @@ a {
   width: 100%;
 }
 
+// subscriptSizing 'dynamic' (app.config.ts) reserves no room below a field, so stacked fields touch each other
+.mat-mdc-form-field {
+  margin-bottom: 16px;
+}
+
 .subtitle,
 .muted {
   color: var(--mat-sys-on-surface-variant);
