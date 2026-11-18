@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /**
@@ -13,6 +14,8 @@ import java.util.Objects;
 public record CompetenceMonth(YearMonth value) implements Comparable<CompetenceMonth> {
 
 	public static final ZoneId ZONE = ZoneId.of("America/Sao_Paulo");
+
+	private static final DateTimeFormatter DISPLAY = DateTimeFormatter.ofPattern("MM/yyyy");
 
 	public CompetenceMonth {
 		Objects.requireNonNull(value, "value");
@@ -36,6 +39,13 @@ public record CompetenceMonth(YearMonth value) implements Comparable<CompetenceM
 	@Override
 	public int compareTo(CompetenceMonth other) {
 		return value.compareTo(other.value);
+	}
+
+	/**
+	 * Month for messages shown to the user, e.g. {@code 11/2026}. The API keeps the ISO form ({@link #toString()}).
+	 */
+	public String format() {
+		return value.format(DISPLAY);
 	}
 
 	@Override

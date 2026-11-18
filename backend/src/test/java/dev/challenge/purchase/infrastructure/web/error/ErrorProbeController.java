@@ -21,7 +21,7 @@ class ErrorProbeController {
 	@GetMapping("/test/errors/{kind}")
 	String fail(@PathVariable String kind) {
 		throw switch (kind) {
-			case "domain" -> new DomainException(ErrorCode.BUDGET_EXCEEDED, "O centro de custo CC-TI-01 tem R$ 8.200,00 disponíveis em 2026-11; a solicitação exige R$ 24.499,50.");
+			case "domain" -> new DomainException(ErrorCode.BUDGET_EXCEEDED, "O centro de custo CC-TI-01 tem R$ 8.200,00 disponíveis em 11/2026; a solicitação exige R$ 24.499,50.");
 			case "not-found" -> new NotFoundException("Solicitação 42 não encontrada.");
 			case "forbidden" -> new ForbiddenException("Somente ADMIN gerencia centros de custo.");
 			case "conflict" -> new ConflictException("IDEMPOTENCY_KEY_REUSED", "Idempotency-Key já usada com outro payload.");

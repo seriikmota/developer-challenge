@@ -143,7 +143,7 @@ public class RequestWorkflowService {
 		}
 		var code = costCenters.findById(request.getCostCenterId()).map(CostCenterEntity::getCode).orElse(String.valueOf(request.getCostCenterId()));
 		var available = budgets.findByCostCenterIdAndMonth(request.getCostCenterId(), month).map(MonthlyBudgetEntity::getAvailable).orElse(Money.ZERO);
-		throw new DomainException(ErrorCode.BUDGET_EXCEEDED, "Não é possível aprovar: o centro de custo " + code + " tem " + available.format() + " disponíveis em " + month + "; a solicitação exige " + version.getTotal().format() + ".");
+		throw new DomainException(ErrorCode.BUDGET_EXCEEDED, "Não é possível aprovar: o centro de custo " + code + " tem " + available.format() + " disponíveis em " + month.format() + "; a solicitação exige " + version.getTotal().format() + ".");
 	}
 
 }

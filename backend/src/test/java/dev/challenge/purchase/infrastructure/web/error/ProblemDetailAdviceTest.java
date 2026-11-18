@@ -47,7 +47,7 @@ class ProblemDetailAdviceTest {
 	@Test
 	void domainDetailExplainsTheReason() throws Exception {
 		mvc.perform(get("/test/errors/domain").with(jwt()))
-				.andExpect(jsonPath("$.detail").value("O centro de custo CC-TI-01 tem R$ 8.200,00 disponíveis em 2026-11; a solicitação exige R$ 24.499,50."));
+				.andExpect(jsonPath("$.detail").value("O centro de custo CC-TI-01 tem R$ 8.200,00 disponíveis em 11/2026; a solicitação exige R$ 24.499,50."));
 	}
 
 	@Test

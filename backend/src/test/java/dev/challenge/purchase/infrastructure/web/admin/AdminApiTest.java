@@ -131,7 +131,7 @@ class AdminApiTest extends ApiTestSupport {
 		send(put("/cost-centers/" + costCenter.getId() + "/budgets/2026-09"), admin, "{ \"amount\": 2999.99 }")
 				.andExpect(status().isUnprocessableContent())
 				.andExpect(jsonPath("$.code").value("BUDGET_BELOW_CONSUMED"))
-				.andExpect(jsonPath("$.detail").value("Não é possível definir o orçamento de 2026-09 do centro de custo " + costCenter.getCode() + " em R$ 2.999,99: já foram consumidos R$ 3.000,00."));
+				.andExpect(jsonPath("$.detail").value("Não é possível definir o orçamento de 09/2026 do centro de custo " + costCenter.getCode() + " em R$ 2.999,99: já foram consumidos R$ 3.000,00."));
 		send(put("/cost-centers/" + costCenter.getId() + "/budgets/2026-09"), admin, "{ \"amount\": 3000 }").andExpect(status().isOk()).andExpect(jsonPath("$.available").value("0.00"));
 	}
 

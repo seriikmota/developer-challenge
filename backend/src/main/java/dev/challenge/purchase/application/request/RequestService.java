@@ -2,6 +2,7 @@ package dev.challenge.purchase.application.request;
 
 import java.time.Clock;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +32,11 @@ import dev.challenge.purchase.infrastructure.persistence.request.RequestSnapshot
  */
 @Service
 public class RequestService {
+
+	/**
+	 * Dates in messages shown to the user. The API itself always uses ISO dates.
+	 */
+	private static final DateTimeFormatter DISPLAY_DATE = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 	/** Request fields the list can be sorted by. */
 	public static final Set<String> SORTABLE = Set.of("createdAt", "updatedAt", "status", "id");
@@ -142,7 +148,7 @@ public class RequestService {
 		}
 		var today = LocalDate.now(clock.withZone(CompetenceMonth.ZONE));
 		if (command.neededBy() != null && !command.neededBy().isAfter(today)) {
-			errors.add(new FieldError("neededBy", "a data de necessidade precisa ser futura (depois de " + today + ")"));
+			errors.add(new FieldError("neededBy", "a data de necessidade precisa ser futura (depois de " + today.format(DISPLAY_DATE) + ")"));
 		}
 		if (command.items().isEmpty()) {
 			errors.add(new FieldError("items", "informe pelo menos um item"));

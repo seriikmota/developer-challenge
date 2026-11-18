@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
@@ -15,12 +16,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.jayway.jsonpath.JsonPath;
 
+import dev.challenge.purchase.domain.budget.CompetenceMonth;
 import dev.challenge.purchase.domain.budget.Money;
 import dev.challenge.purchase.domain.user.ApproverLevel;
 import dev.challenge.purchase.domain.user.Role;
@@ -107,7 +110,7 @@ class RequestLifecycleApiTest extends ApiTestSupport {
 		act(approverL1, id, "approve", null)
 				.andExpect(status().isUnprocessableContent())
 				.andExpect(jsonPath("$.code").value("BUDGET_EXCEEDED"))
-				.andExpect(jsonPath("$.detail").value("Não é possível aprovar: o centro de custo " + costCenter.getCode() + " tem R$ 999,99 disponíveis em " + currentMonth() + "; a solicitação exige R$ 1.000,00."));
+				.andExpect(jsonPath("$.detail").value("Não é possível aprovar: o centro de custo " + costCenter.getCode() + " tem R$ 999,99 disponíveis em " + currentMonth().format() + "; a solicitação exige R$ 1.000,00."));
 
 		getRequest(owner, id)
 				.andExpect(jsonPath("$.status").value("PENDING_APPROVAL"))
@@ -335,7 +338,8 @@ class RequestLifecycleApiTest extends ApiTestSupport {
 				.andExpect(jsonPath("$.errors[*].field", containsInAnyOrder("title", "items[0].quantity", "items[0].unitPrice")));
 		createRequest(owner, body("Data passada", "OTHER", 1, "10.00").replace(LocalDate.now().plusDays(30).toString(), LocalDate.now().toString()))
 				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.errors[0].field").value("neededBy"));
+				.andExpect(jsonPath("$.errors[0].field").value("neededBy"))
+				.andExpect(jsonPath("$.errors[0].message").value(endsWith("(depois de " + LocalDate.now(CompetenceMonth.ZONE).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + ")")));
 	}
 
 }

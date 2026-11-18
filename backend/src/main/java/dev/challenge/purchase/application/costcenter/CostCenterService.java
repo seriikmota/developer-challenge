@@ -72,7 +72,7 @@ public class CostCenterService {
 		var costCenter = find(costCenterId);
 		if (!budgets.trySetAmount(costCenterId, month, amount, clock.instant())) {
 			var consumed = budgets.findByCostCenterIdAndMonth(costCenterId, month).map(MonthlyBudgetEntity::getConsumed).orElse(Money.ZERO);
-			throw new DomainException(ErrorCode.BUDGET_BELOW_CONSUMED, "Não é possível definir o orçamento de " + month + " do centro de custo " + costCenter.getCode() + " em " + amount.format() + ": já foram consumidos " + consumed.format() + ".");
+			throw new DomainException(ErrorCode.BUDGET_BELOW_CONSUMED, "Não é possível definir o orçamento de " + month.format() + " do centro de custo " + costCenter.getCode() + " em " + amount.format() + ": já foram consumidos " + consumed.format() + ".");
 		}
 		return budget(costCenterId, month);
 	}

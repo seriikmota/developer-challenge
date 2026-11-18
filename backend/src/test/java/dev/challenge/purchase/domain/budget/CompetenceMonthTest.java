@@ -33,6 +33,12 @@ class CompetenceMonthTest {
 	}
 
 	@Test
+	void formatsForUsersAsMonthAndYear() {
+		assertThat(CompetenceMonth.parse("2026-01").format()).isEqualTo("01/2026");
+		assertThat(CompetenceMonth.parse("2026-11").toString()).isEqualTo("2026-11");
+	}
+
+	@Test
 	void ordersChronologically() {
 		assertThat(CompetenceMonth.parse("2026-12")).isGreaterThan(CompetenceMonth.parse("2026-11"));
 	}
