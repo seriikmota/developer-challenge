@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,6 +35,7 @@ import dev.challenge.purchase.application.error.InvalidInputException;
 import dev.challenge.purchase.application.error.NotFoundException;
 import dev.challenge.purchase.domain.error.DomainException;
 import dev.challenge.purchase.infrastructure.web.RequestIdFilter;
+import tools.jackson.databind.exc.MismatchedInputException;
 
 /**
  * Turns every error into {@code application/problem+json} (RFC 9457) with {@code type}, {@code title},
@@ -57,6 +60,7 @@ public class ProblemDetailAdvice extends ResponseEntityExceptionHandler {
 			Map.entry("CONCURRENT_MODIFICATION", "Conflito de concorrência"),
 			Map.entry("EMAIL_ALREADY_REGISTERED", "E-mail já cadastrado"),
 			Map.entry("IDEMPOTENCY_KEY_REUSED", "Idempotency-Key reutilizada"),
+			Map.entry("COST_CENTER_CODE_TAKEN", "Código de centro de custo já usado"),
 			Map.entry("INVALID_TRANSITION", "Transição inválida"),
 			Map.entry("NOT_EDITABLE", "Solicitação não editável"),
 			Map.entry("NOT_OWNER", "Ação exclusiva do dono"),
@@ -125,7 +129,21 @@ public class ProblemDetailAdvice extends ResponseEntityExceptionHandler {
 
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+		if (ex.getMostSpecificCause() instanceof MismatchedInputException mismatch && !mismatch.getPath().isEmpty()) {
+			var field = mismatch.getPath().stream().map(ref -> ref.getPropertyName() != null ? ref.getPropertyName() : "[" + ref.getIndex() + "]").collect(Collectors.joining(".")).replace(".[", "[");
+			var problem = problem(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", "A requisição tem 1 campo(s) inválido(s).");
+			problem.setProperty("errors", List.of(new FieldProblem(field, "valor inválido para este campo")));
+			return ResponseEntity.badRequest().headers(headers).body(problem);
+		}
 		var problem = problem(HttpStatus.BAD_REQUEST, "MALFORMED_REQUEST", "O corpo da requisição não é um JSON válido para este endpoint.");
+		return ResponseEntity.badRequest().headers(headers).body(problem);
+	}
+
+	@Override
+	protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+		var field = ex.getPropertyName() != null ? ex.getPropertyName() : "parameter";
+		var problem = problem(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", "A requisição tem 1 campo(s) inválido(s).");
+		problem.setProperty("errors", List.of(new FieldProblem(field, "valor inválido: " + ex.getValue())));
 		return ResponseEntity.badRequest().headers(headers).body(problem);
 	}
 
