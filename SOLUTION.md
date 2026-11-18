@@ -15,6 +15,9 @@ Leituras complementares:
 - [`backend/README.md`](backend/README.md): variáveis, comandos e exemplos com `curl`.
 - [`frontend/README.md`](frontend/README.md): telas, decisões e testes do front.
 - [`docs/adr/`](docs/adr/README.md): as decisões de arquitetura, com alternativas consideradas.
+- [`docs/deploy.md`](docs/deploy.md): o deploy contínuo no servidor.
+
+**Demonstração pública:** https://compras.erikmota.dev (usuários do seed abaixo).
 
 ---
 
@@ -185,13 +188,14 @@ O teste encontrou um problema, já corrigido.
 | **Revogação imediata de papel** | O papel e o nível vêm do JWT. Se um ADMIN muda o papel de alguém, a mudança vale quando o token atual expirar. |
 | **Limpeza das chaves de idempotência** | As chaves nunca são apagadas, o que cumpre o mínimo de 24 horas. O índice em `created_at` deixa a limpeza periódica pronta para ser criada. |
 | **Idempotência nas transições** | Não é necessária para a segurança, porque o `lockVersion` já faz uma ação repetida receber `409`. |
-| **Diferenciais não feitos** | Tempo médio de aprovação, outbox, job de SLA, rate limit no login, E2E, métricas e tracing, deploy público. |
+| **Diferenciais não feitos** | Tempo médio de aprovação, outbox, job de SLA, rate limit no login, E2E, métricas e tracing. |
 
 Diferenciais entregues:
 
 - histórico append-only **garantido pelo banco** (triggers);
 - filtros `minAmount`, `maxAmount` e `q`;
-- imutabilidade das versões enviadas também garantida por trigger.
+- imutabilidade das versões enviadas também garantida por trigger;
+- **deploy público** em https://compras.erikmota.dev. Cada push em `teste-pleno` com o CI verde publica imagens arm64 no GHCR e atualiza o servidor por SSH, com backup do banco e rollback automático. O acesso passa pelo Cloudflare Tunnel, sem porta exposta. Detalhes em [`docs/deploy.md`](docs/deploy.md).
 
 ## O que eu faria com mais tempo
 
