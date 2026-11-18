@@ -7,7 +7,8 @@ on:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  # a newer push cancels an older pull request run, but never a run that may be deploying
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -81,3 +82,29 @@ jobs:
       - name: Stop the stack
         if: always()
         run: docker compose down --volumes
+
+  # Continuous deployment (docs/deploy.md): only for a push to teste-pleno in this repository, after every check
+  # above passed, and only once the server is ready (repository variable DEPLOY_ENABLED=true). Pull requests,
+  # including those from forks, never reach these jobs.
+  release:
+    name: Release (arm64 images)
+    needs: [backend, frontend, compose]
+    if: >-
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/teste-pleno' &&
+      github.repository == 'seriikmota/developer-challenge' &&
+      vars.DEPLOY_ENABLED == 'true'
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/release.yml
+    with:
+      sha: ${{ github.sha }}
+
+  deploy:
+    name: Deploy
+    needs: release
+    uses: ./.github/workflows/deploy.yml
+    with:
+      sha: ${{ github.sha }}
+    secrets: inherit

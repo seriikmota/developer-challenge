@@ -1,0 +1,154 @@
+name: deploy
+
+# Updates the server over SSH (docs/deploy.md). Runs on a GitHub-hosted runner: nothing installed on the VM
+# executes workflow code, so a pull request (even from a fork) can never reach the server. The SSH key lives in
+# the "production" environment, whose secrets are never given to pull request runs.
+#
+# Called by ci.yml after the images were published. To roll back to an older commit by hand (GitHub only accepts
+# manual runs once this file is also on the default branch):
+#   gh workflow run deploy.yml --ref teste-pleno -f sha=<commit-sha>
+
+on:
+  workflow_call:
+    inputs:
+      sha:
+        description: Commit SHA to deploy
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: Commit SHA to deploy (redeploy or roll back); its images must exist in GHCR
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy to the server
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # One deploy at a time, automatic or manual; the next one waits instead of cancelling a half-done deploy.
+    concurrency:
+      group: deploy-purchase
+      cancel-in-progress: false
+    environment:
+      name: production
+      url: ${{ vars.PUBLIC_URL }}
+    env:
+      SHA: ${{ inputs.sha }}
+      DEPLOY_DIR: ${{ vars.DEPLOY_DIR || '/opt/purchase' }}
+      # SSH through Cloudflare Access when the service token exists, direct SSH otherwise
+      USE_CLOUDFLARE: ${{ secrets.CF_ACCESS_CLIENT_ID != '' }}
+    steps:
+      - name: Validate the commit SHA
+        # inputs come from a person on workflow_dispatch: never interpolate them into a shell unchecked
+        run: |
+          if ! [[ $SHA =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::sha must be a full 40-character commit SHA, got '$SHA'"
+            exit 1
+          fi
+          # both values are expanded here and sent inside the remote command, so they must be plain
+          if ! [[ $DEPLOY_DIR =~ ^/[A-Za-z0-9/_.-]+$ ]]; then
+            echo "::error::DEPLOY_DIR must be an absolute path with letters, digits, / _ . - only"
+            exit 1
+          fi
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.sha }}
+
+      - name: Check the secrets
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+        run: |
+          missing=0
+          for name in SSH_HOST SSH_USER SSH_KEY SSH_KNOWN_HOSTS; do
+            if [ -z "${!name}" ]; then
+              echo "::error::secret $name is empty: create it in Settings > Environments > production"
+              missing=1
+            fi
+          done
+          case "$SSH_KEY" in
+            '-----BEGIN '*'PRIVATE KEY-----'*) ;;
+            ssh-ed25519*|ssh-rsa*|ecdsa-*) echo "::error::SSH_KEY holds the PUBLIC key; paste the private key file"; missing=1 ;;
+            '') ;;
+            *) echo "::error::SSH_KEY must be the whole private key file, BEGIN and END lines included"; missing=1 ;;
+          esac
+          exit $missing
+
+      - name: Install cloudflared (SSH through Cloudflare Access)
+        if: env.USE_CLOUDFLARE == 'true'
+        run: |
+          sudo curl -fsSL -o /usr/local/bin/cloudflared \
+            https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+          sudo chmod +x /usr/local/bin/cloudflared
+          cloudflared --version
+
+      - name: Prepare SSH
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
+          # pinned host key: without it ssh would trust whatever answers at that address
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts && chmod 600 ~/.ssh/known_hosts
+          {
+            echo "Host deploy-target"
+            echo "  HostName $SSH_HOST"
+            echo "  User $SSH_USER"
+            echo "  Port $SSH_PORT"
+            echo "  IdentityFile ~/.ssh/deploy_key"
+            echo "  IdentitiesOnly yes"
+            echo "  StrictHostKeyChecking yes"
+            echo "  ServerAliveInterval 30"
+            # the service token stays in the environment of the next steps, never in this file
+            if [ "$USE_CLOUDFLARE" = true ]; then
+              echo "  ProxyCommand cloudflared access ssh --hostname %h"
+            fi
+          } > ~/.ssh/config
+          chmod 600 ~/.ssh/config
+
+      - name: Upload the deploy files
+        env:
+          TUNNEL_SERVICE_TOKEN_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+          TUNNEL_SERVICE_TOKEN_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
+        run: |
+          # shellcheck disable=SC2029 # DEPLOY_DIR is validated above and meant to expand here
+          ssh deploy-target "mkdir -p '$DEPLOY_DIR/release'"
+          scp -q deploy.sh docker-compose.prod.yml "deploy-target:$DEPLOY_DIR/release/"
+
+      - name: Deploy (pull, backup, start, rollback on failure)
+        env:
+          TUNNEL_SERVICE_TOKEN_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+          TUNNEL_SERVICE_TOKEN_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
+        run: |
+          # shellcheck disable=SC2029 # SHA and DEPLOY_DIR are validated above and meant to expand here
+          ssh deploy-target "PURCHASE_DIR='$DEPLOY_DIR' bash '$DEPLOY_DIR/release/deploy.sh' '$SHA'"
+
+      - name: Public health check
+        if: vars.PUBLIC_URL != ''
+        env:
+          PUBLIC_URL: ${{ vars.PUBLIC_URL }}
+        run: |
+          for _ in $(seq 1 12); do
+            if curl -fsS --max-time 10 "$PUBLIC_URL/api/health" | grep -q '"status":"UP"'; then
+              echo "healthy at $PUBLIC_URL"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::$PUBLIC_URL/api/health did not answer UP"
+          exit 1
+
+      - name: Remove the key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key ~/.ssh/config

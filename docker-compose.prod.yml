@@ -1,0 +1,86 @@
+# Production stack on the server (see docs/deploy.md). deploy.sh copies this file to $PURCHASE_DIR as
+# docker-compose.yml, next to the server .env, and runs it with images published by the release workflow.
+#
+# Differences from docker-compose.yml (local development):
+#   - prebuilt arm64 images from GHCR, selected by IMAGE_TAG (the commit SHA);
+#   - no published ports: the only way in is the Cloudflare Tunnel (cloudflared -> frontend);
+#   - required secrets (no defaults): POSTGRES_PASSWORD, JWT_SECRET, CLOUDFLARE_TUNNEL_TOKEN;
+#   - memory limits and log rotation.
+#
+# cloudflared runs only with the "tunnel" profile (COMPOSE_PROFILES=tunnel in the server .env), so the
+# stack can also be started locally without a tunnel to test the images.
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: "3"
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-purchase}
+      POSTGRES_USER: ${POSTGRES_USER:-purchase}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      TZ: UTC
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    mem_limit: 512m
+    restart: unless-stopped
+    logging: *logging
+
+  backend:
+    image: ${IMAGE_PREFIX:-ghcr.io/seriikmota/developer-challenge}-backend:${IMAGE_TAG:?set IMAGE_TAG in .env}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-purchase}
+      DB_USERNAME: ${POSTGRES_USER:-purchase}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      FLYWAY_LOCATIONS: ${FLYWAY_LOCATIONS:-classpath:db/migration,classpath:db/seed}
+      # fixed key: sessions survive restarts and deploys
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env (openssl rand -base64 48)}
+      JWT_TTL: ${JWT_TTL:-PT15M}
+      LOG_FORMAT: ecs
+    mem_limit: 1536m
+    restart: unless-stopped
+    logging: *logging
+
+  frontend:
+    image: ${IMAGE_PREFIX:-ghcr.io/seriikmota/developer-challenge}-frontend:${IMAGE_TAG:?set IMAGE_TAG in .env}
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      BACKEND_HOST: backend:8080
+    mem_limit: 128m
+    restart: unless-stopped
+    logging: *logging
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    profiles: [tunnel]
+    command: tunnel --no-autoupdate run
+    environment:
+      # not marked required: compose would demand it even with the profile off; an empty token makes
+      # cloudflared exit, and deploy.sh reports the stack as unhealthy
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN:-}
+    # lets a tunnel route such as ssh://host.docker.internal:22 reach the VM's sshd (SSH through Cloudflare Access)
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    depends_on:
+      frontend:
+        condition: service_healthy
+    mem_limit: 128m
+    restart: unless-stopped
+    logging: *logging
+
+volumes:
+  postgres-data:
