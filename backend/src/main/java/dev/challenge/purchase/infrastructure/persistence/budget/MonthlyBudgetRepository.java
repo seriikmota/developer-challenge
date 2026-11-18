@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import dev.challenge.purchase.domain.budget.CompetenceMonth;
 import dev.challenge.purchase.domain.budget.Money;
@@ -42,6 +43,7 @@ public interface MonthlyBudgetRepository extends JpaRepository<MonthlyBudgetEnti
 		return upsertAmountIfNotBelowConsumed(costCenterId, month.firstDay(), amount.amount(), now) == 1;
 	}
 
+	@Transactional
 	@Modifying(flushAutomatically = true)
 	@Query(nativeQuery = true, value = """
 			UPDATE monthly_budget
@@ -52,6 +54,7 @@ public interface MonthlyBudgetRepository extends JpaRepository<MonthlyBudgetEnti
 			""")
 	int consumeIfAvailable(@Param("costCenterId") Long costCenterId, @Param("month") LocalDate month, @Param("amount") BigDecimal amount, @Param("now") Instant now);
 
+	@Transactional
 	@Modifying(flushAutomatically = true)
 	@Query(nativeQuery = true, value = """
 			INSERT INTO monthly_budget AS b (cost_center_id, month, amount, consumed, created_at, updated_at)

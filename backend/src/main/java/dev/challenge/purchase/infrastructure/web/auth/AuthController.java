@@ -11,10 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.challenge.purchase.application.auth.AuthService;
+import dev.challenge.purchase.application.user.UserView;
 import dev.challenge.purchase.domain.user.Actor;
-import dev.challenge.purchase.domain.user.ApproverLevel;
-import dev.challenge.purchase.domain.user.Role;
-import dev.challenge.purchase.infrastructure.persistence.user.UserEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,9 +37,9 @@ public class AuthController {
 	@PostMapping("/register")
 	@SecurityRequirements
 	@Operation(summary = "Cadastro público", description = "Cria sempre um usuário SOLICITANTE. Outros papéis são criados por um ADMIN.")
-	public ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterRequest body) {
+	public ResponseEntity<UserView> register(@Valid @RequestBody RegisterRequest body) {
 		var user = authService.register(body.name(), body.email(), body.password(), body.costCenterId());
-		return ResponseEntity.created(URI.create("/users/" + user.getId())).body(UserResponse.of(user));
+		return ResponseEntity.created(URI.create("/users/" + user.getId())).body(UserView.of(user));
 	}
 
 	@PostMapping("/login")
@@ -49,13 +47,13 @@ public class AuthController {
 	@Operation(summary = "Autentica e devolve um JWT de curta duração")
 	public LoginResponse login(@Valid @RequestBody LoginRequest body) {
 		var result = authService.login(body.email(), body.password());
-		return new LoginResponse(result.token().value(), "Bearer", result.token().expiresAt(), UserResponse.of(result.user()));
+		return new LoginResponse(result.token().value(), "Bearer", result.token().expiresAt(), UserView.of(result.user()));
 	}
 
 	@GetMapping("/me")
 	@Operation(summary = "Usuário logado")
-	public UserResponse me(Actor actor) {
-		return UserResponse.of(authService.me(actor.userId()));
+	public UserView me(Actor actor) {
+		return UserView.of(authService.me(actor.userId()));
 	}
 
 	public record RegisterRequest(
@@ -70,18 +68,7 @@ public class AuthController {
 			@NotBlank(message = "informe a senha") String password) {
 	}
 
-	public record LoginResponse(String accessToken, String tokenType, Instant expiresAt, UserResponse user) {
-	}
-
-	/**
-	 * Public view of a user: never includes the password or its hash.
-	 */
-	public record UserResponse(Long id, String name, String email, Role role, ApproverLevel approverLevel, Long costCenterId) {
-
-		static UserResponse of(UserEntity user) {
-			return new UserResponse(user.getId(), user.getName(), user.getEmail(), user.getRole(), user.getApproverLevel(), user.getCostCenterId());
-		}
-
+	public record LoginResponse(String accessToken, String tokenType, Instant expiresAt, UserView user) {
 	}
 
 }

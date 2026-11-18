@@ -12,6 +12,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import dev.challenge.purchase.application.common.Correlation;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +29,7 @@ public class RequestIdFilter extends OncePerRequestFilter {
 
 	public static final String HEADER = "X-Request-Id";
 
-	public static final String MDC_KEY = "requestId";
+	public static final String MDC_KEY = Correlation.MDC_KEY;
 
 	/** Accepts UUIDs and similar ids; anything else (too long, spaces, control characters) is replaced. */
 	private static final Pattern SAFE_ID = Pattern.compile("[A-Za-z0-9._:-]{1,100}");
