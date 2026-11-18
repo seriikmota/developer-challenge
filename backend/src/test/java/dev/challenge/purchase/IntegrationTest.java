@@ -12,12 +12,12 @@ import org.springframework.context.annotation.Import;
 
 /**
  * Full application against a real PostgreSQL (Testcontainers). Every test class using it shares one Spring context
- * and one container.
+ * and one container. The demo seed is left out: tests create their own data.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@SpringBootTest
+@SpringBootTest(properties = "spring.flyway.locations=classpath:db/migration")
 @AutoConfigureMockMvc
 @Import(TestcontainersConfiguration.class)
 public @interface IntegrationTest {

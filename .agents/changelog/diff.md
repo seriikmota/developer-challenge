@@ -281,3 +281,21 @@ One block per agent turn, one row per changed file:
 |---|---|---|---|
 | `backend/src/test/java/dev/challenge/purchase/infrastructure/web/request/ConcurrencyApiTest.java` | created | +198 | -0 |
 | `backend/src/test/java/dev/challenge/purchase/infrastructure/web/request/FullApprovalFlowApiTest.java` | created | +97 | -0 |
+
+---
+### Turn 2026-11-18 12:01:19 -0300 · ClaudeCode
+- **Source**: command
+- **Session**: n/a
+- **Prompt**: n/a
+- **Summary**: Phase 7: idempotent repeatable demo seed (current-month budgets), seed consistency test, multi-stage backend Dockerfile and backend README
+
+| File | Change | Additions | Removals |
+|---|---|---|---|
+| `.env.example` | modified | +2 | -0 |
+| `backend/.dockerignore` | created | +7 | -0 |
+| `backend/Dockerfile` | created | +33 | -0 |
+| `backend/README.md` | created | +175 | -0 |
+| `backend/src/main/resources/application.yml` | modified | +2 | -1 |
+| `backend/src/main/resources/db/seed/R__seed_demo_data.sql` | created | +291 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/IntegrationTest.java` | modified | +2 | -2 |
+| `backend/src/test/java/dev/challenge/purchase/SeedDataTest.java` | created | +137 | -0 |
