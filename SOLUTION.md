@@ -155,6 +155,27 @@ Telas: login, dashboard, listagem (filtros, ordenação e paginação no servido
 | **Idempotência em tabela**, gravada na mesma transação da criação, com hash do payload já interpretado | Não há janela entre criar e registrar a chave; `10.5` e `"10.50"` são tratados como o mesmo payload; corridas com a mesma chave criam uma só solicitação | A tabela cresce, porque a limpeza não foi implementada | [006](docs/adr/006-idempotency.md) |
 | **Seed como migration repetível** do Flyway | Roda em toda subida sem duplicar dados e recria o orçamento do mês corrente | Fica fora dos testes de integração, que criam os próprios dados | — |
 
+## Teste de carga
+
+Rodei a pilha do `docker compose` (nginx → API → PostgreSQL) por 150 segundos com, ao mesmo tempo:
+
+- 16 leitores (listagem com filtros, detalhe, histórico, dashboard e caixa de aprovação);
+- 12 solicitantes criando e enviando solicitações;
+- 8 aprovadores decidindo o que chegava na caixa;
+- rajadas de corrida: mesma etapa, mesma chave de idempotência e o mesmo saldo disputado.
+
+| Resultado | Valor |
+|---|---|
+| Vazão | ~750 req/s, 113 mil requisições, 0 erros 5xx |
+| Latência p95 | 35 a 100 ms nas escritas; ~100 ms na listagem; ~460 ms na caixa de aprovação (com 23 mil pendentes no mesmo centro de custo) |
+| Corridas | Mesma etapa: sempre um `200` e o resto `409`. Mesma chave: sempre um único id. 20 aprovações de R$ 1.000 contra R$ 5.000: exatamente 5 aprovadas e 15 `BUDGET_EXCEEDED`. |
+| Invariantes no banco | Todas verdadeiras: consumo do orçamento igual à soma das aprovadas, nenhum saldo negativo, ninguém decidindo duas etapas da mesma versão nem a própria solicitação, status de cada solicitação igual ao do último evento do histórico |
+
+O teste encontrou um problema, já corrigido.
+
+- **Sintoma:** o nginx abria uma conexão nova com a API a cada requisição. Por volta de 1.000 req/s, as portas locais se esgotavam (`connect() failed (99: Address not available)`) e o nginx respondia `502`.
+- **Correção:** o proxy passou a usar um pool de conexões persistentes (`keepalive`).
+
 ## O que ficou de fora
 
 | Item | Situação |
@@ -179,4 +200,8 @@ Diferenciais entregues:
 3. **Testes E2E** com Playwright cobrindo o roteiro completo, desde a criação até o `BUDGET_EXCEEDED`.
 4. **Transactional outbox** publicando as mudanças de estado, base para notificações e para o job de SLA.
 5. **Telas de administração** e um job agendado para limpar as chaves de idempotência.
-6. **Observabilidade:** métricas do Actuator no Prometheus e tracing com OpenTelemetry, usando o `X-Request-Id` que já é propagado.
+6. **Caixa de aprovação filtrada no banco:**
+   - Hoje o SQL traz as candidatas (centro de custo e status) e a policy de elegibilidade filtra em memória. É a mesma regra que valida a ação.
+   - Com dezenas de milhares de pendentes no mesmo centro de custo, a latência sobe (p95 ~460 ms no teste de carga).
+   - Levaria o filtro de nível e de segregação para a consulta, mantendo a policy como verificação final.
+7. **Observabilidade:** métricas do Actuator no Prometheus e tracing com OpenTelemetry, usando o `X-Request-Id` que já é propagado.
