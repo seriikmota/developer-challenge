@@ -445,3 +445,29 @@ One block per agent turn, one row per changed file:
 | `SOLUTION.md` | created | +182 | -0 |
 | `docs/adr/001-concurrency-strategy.md` | modified | +1 | -1 |
 | `docs/adr/005-layered-architecture.md` | modified | +1 | -0 |
+
+---
+### Turn 2026-11-18 15:32:07 -0300 · ClaudeCode
+- **Source**: hook
+- **Session**: n/a
+- **Prompt**: n/a
+- **Summary**: n/a
+- **Note**: previous turn ended without a record/Stop event (interrupted?); rows may include manual edits made before the next prompt
+
+| File | Change | Additions | Removals |
+|---|---|---|---|
+| `docker-compose.yml` | modified | +1 | -1 |
+| `frontend/Dockerfile` | modified | +2 | -1 |
+| `frontend/README.md` | modified | +1 | -1 |
+| `frontend/nginx/default.conf.template` | modified | +12 | -2 |
+
+---
+### Turn 2026-11-18 15:37:02 -0300 · ClaudeCode
+- **Source**: command
+- **Session**: 92da3de5-81c0-495f-b50f-a93d5b8b13f4
+- **Prompt**: <task-noti***> <task-id>bbb3ujz3j</task-id> <tool-use-id>toolu_01YQ4KNmBaAT7tVSUfXLTBaX</tool-use-id> <output-file>C:\Users\serii\AppData\Local\Temp\claude\95770cef782fa40f\92da3de5-81c0-495f-b50f-a93d5b8b13f4\tasks\bbb3ujz3j.output</output-file> <status>completed</status> <summary>Background command "Second load run with nginx keepalive" completed (exit code 0)</summary> </task-noti***>
+- **Summary**: Full browser and load validation: nginx upstream keepalive fixes 502 under load (port exhaustion), BACKEND_HOST variable, load-test results and inbox scaling note in SOLUTION.md
+
+| File | Change | Additions | Removals |
+|---|---|---|---|
+| `SOLUTION.md` | modified | +26 | -1 |

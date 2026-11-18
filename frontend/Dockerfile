@@ -10,7 +10,8 @@ RUN npm run build
 
 # ---- runtime: static files served by nginx, which also proxies /api to the back-end ----
 FROM nginx:1.29-alpine
-ENV BACKEND_URL=http://backend:8080
+# host:port of the API inside the Docker network
+ENV BACKEND_HOST=backend:8080
 COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
 COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
 EXPOSE 80

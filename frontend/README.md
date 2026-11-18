@@ -27,7 +27,7 @@ O front chama sempre o caminho relativo `/api`, nunca uma URL absoluta. Por isso
 | Onde | Quem atende `/api` | Configuração |
 |---|---|---|
 | `npm start` | dev-server do Angular | `proxy.conf.json` (alvo `http://localhost:8080`) |
-| Docker | nginx | variável `BACKEND_URL` (padrão `http://backend:8080`) em `nginx/default.conf.template` |
+| Docker | nginx, com conexões persistentes ao back-end | variável `BACKEND_HOST` (padrão `backend:8080`) em `nginx/default.conf.template` |
 
 O nginx também devolve o `index.html` para as rotas do cliente. Assim, um link como `/requests/42` funciona quando é aberto direto ou depois de recarregar a página.
 

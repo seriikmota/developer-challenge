@@ -1,13 +1,23 @@
 # SPA + reverse proxy: the browser talks only to this origin, so the API needs no CORS.
+
+# Persistent connections to the back-end. Without them nginx opens one TCP connection per request and, under
+# load, runs out of local ports (connections stuck in TIME_WAIT) and answers 502.
+upstream backend {
+    server ${BACKEND_HOST};
+    keepalive 64;
+}
+
 server {
     listen 80;
     server_name _;
     root /usr/share/nginx/html;
     index index.html;
 
-    # /api/requests -> ${BACKEND_URL}/requests (the trailing slash strips the /api prefix)
+    # /api/requests -> backend/requests (the trailing slash strips the /api prefix)
     location /api/ {
-        proxy_pass ${BACKEND_URL}/;
+        proxy_pass http://backend/;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
