@@ -91,6 +91,7 @@ if [ -n "$(docker compose ps -q --status running postgres 2>/dev/null)" ]; then
     notify "❌ Deploy de $short cancelado: o backup do banco falhou. Nenhum container foi alterado."
     exit 1
   fi
+  # shellcheck disable=SC2012 # names are generated above: no spaces or special characters
   ls -1t backup/purchase-*.sql.gz | tail -n +6 | xargs -r rm -f
 fi
 

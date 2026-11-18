@@ -61,7 +61,7 @@ O grupo `docker` dá poder equivalente ao de root. Por isso a chave fica só no 
 
 ### 2. Segredos do servidor
 
-Copie a seção "Production server only" do `.env.example` para `/opt/purchase/.env`, com `chmod 600`, e preencha:
+Crie `/opt/purchase/.env` (dono `purchase`, `chmod 600`) com as linhas da seção "Production server only" do `.env.example` sem o `#`, e preencha:
 
 - `POSTGRES_PASSWORD`: gere com `openssl rand -base64 24`;
 - `JWT_SECRET`: gere com `openssl rand -base64 48`;

@@ -504,3 +504,17 @@ One block per agent turn, one row per changed file:
 | `.github/workflows/release.yml` | modified | +11 | -19 |
 | `docker-compose.prod.yml` | modified | +3 | -0 |
 | `docs/deploy.md` | modified | +95 | -37 |
+
+---
+### Turn 2026-11-18 17:41:51 -0300 · ClaudeCode
+- **Source**: command
+- **Session**: 92da3de5-81c0-495f-b50f-a93d5b8b13f4
+- **Prompt**: deixe como está, faça os commits, deixe deploy = false, já ta configurado o claudflare tunnel, valide as alterações dos arquivos, para ver se está tudo util
+- **Summary**: Deploy review: deploy.sh executable and shellcheck-clean, production .env lines commented in .env.example, GHCR source label, guide wording
+
+| File | Change | Additions | Removals |
+|---|---|---|---|
+| `.env.example` | modified | +12 | -7 |
+| `.github/workflows/release.yml` | modified | +8 | -2 |
+| `deploy.sh` | modified | +1 | -0 |
+| `docs/deploy.md` | modified | +1 | -1 |
