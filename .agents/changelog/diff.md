@@ -211,3 +211,61 @@ One block per agent turn, one row per changed file:
 | `backend/src/test/java/dev/challenge/purchase/infrastructure/web/auth/AuthApiTest.java` | created | +265 | -0 |
 | `backend/src/test/java/dev/challenge/purchase/infrastructure/web/error/ErrorProbeController.java` | created | +34 | -0 |
 | `backend/src/test/java/dev/challenge/purchase/infrastructure/web/error/ProblemDetailAdviceTest.java` | created | +59 | -0 |
+
+---
+### Turn 2026-11-18 10:25:00 -0300 · ClaudeCode
+- **Source**: command
+- **Session**: n/a
+- **Prompt**: n/a
+- **Summary**: Phase 5: use cases (admin users, cost centers, budgets; requests create with idempotency, edit, list, detail, versions, transitions, history; inbox; dashboard), RequestActionPolicy as single source of allowedActions, API tests and ADRs 001, 003, 006
+
+| File | Change | Additions | Removals |
+|---|---|---|---|
+| `backend/src/main/java/dev/challenge/purchase/application/approval/InboxService.java` | created | +54 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/common/Correlation.java` | created | +19 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/common/PageView.java` | created | +27 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/common/UserDirectory.java` | created | +38 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/costcenter/BudgetView.java` | created | +15 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/costcenter/CostCenterService.java` | created | +88 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/costcenter/CostCenterView.java` | created | +11 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/dashboard/DashboardService.java` | created | +97 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/request/HistoryRecorder.java` | created | +31 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/request/IdempotentRequestCreator.java` | created | +104 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/request/RequestCommand.java` | created | +20 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/request/RequestFilter.java` | created | +65 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/request/RequestGate.java` | created | +56 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/request/RequestService.java` | created | +159 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/request/RequestViewMapper.java` | created | +102 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/request/RequestViews.java` | created | +59 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/request/RequestVisibility.java` | created | +53 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/request/RequestWorkflowService.java` | created | +149 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/user/UserAdminService.java` | created | +106 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/application/user/UserView.java` | created | +16 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/request/RequestActionPolicy.java` | created | +59 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/request/RequestSnapshot.java` | created | +21 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/request/RequestStateMachine.java` | modified | +12 | -7 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/config/DomainConfig.java` | created | +37 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/budget/MonthlyBudgetRepository.java` | modified | +3 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/request/PurchaseRequestRepository.java` | modified | +13 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/request/RequestSnapshotMapper.java` | created | +17 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/security/SecurityConfig.java` | modified | +2 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/web/Paging.java` | created | +29 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/web/RequestIdFilter.java` | modified | +2 | -1 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/web/admin/CostCenterController.java` | created | +92 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/web/admin/UserController.java` | created | +79 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/web/auth/AuthController.java` | modified | +7 | -20 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/web/error/ProblemDetailAdvice.java` | modified | +18 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/web/request/ApprovalController.java` | created | +42 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/web/request/RequestController.java` | created | +228 | -0 |
+| `backend/src/main/resources/application.yml` | modified | +2 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/domain/request/RequestActionPolicyTest.java` | created | +127 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/web/ApiTestSupport.java` | created | +142 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/web/admin/AdminApiTest.java` | created | +145 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/web/request/IdempotencyApiTest.java` | created | +100 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/web/request/InboxAndDashboardApiTest.java` | created | +87 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/web/request/RequestLifecycleApiTest.java` | created | +341 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/web/request/RequestQueryApiTest.java` | created | +125 | -0 |
+| `docs/adr/001-concurrency-strategy.md` | created | +62 | -0 |
+| `docs/adr/003-forbidden-vs-not-found.md` | created | +49 | -0 |
+| `docs/adr/006-idempotency.md` | created | +44 | -0 |
+| `docs/adr/README.md` | modified | +3 | -3 |

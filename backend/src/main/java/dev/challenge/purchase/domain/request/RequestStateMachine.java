@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import dev.challenge.purchase.domain.approval.Eligibility;
 import dev.challenge.purchase.domain.error.DomainException;
 import dev.challenge.purchase.domain.error.ErrorCode;
 
@@ -65,9 +66,7 @@ public final class RequestStateMachine {
 	 * @throws DomainException NOT_EDITABLE or INVALID_TRANSITION when the status does not allow the action
 	 */
 	public RequestStatus apply(RequestStatus from, Action action, boolean isLastStep) {
-		if (!canApply(from, action)) {
-			throw refusal(from, action);
-		}
+		check(from, action).orThrow();
 		return switch (action) {
 			case EDIT -> from;
 			case SUBMIT -> RequestStatus.PENDING_APPROVAL;
@@ -78,17 +77,23 @@ public final class RequestStateMachine {
 		};
 	}
 
-	private DomainException refusal(RequestStatus from, Action action) {
+	/**
+	 * Whether the status allows the action, with the reason when it does not. Does not throw.
+	 */
+	public Eligibility check(RequestStatus from, Action action) {
+		if (canApply(from, action)) {
+			return Eligibility.granted();
+		}
 		var prefix = "Não é possível " + action.verb() + ": a solicitação está em " + from;
 		if (from.isFinal()) {
 			var code = action == EDIT ? ErrorCode.NOT_EDITABLE : ErrorCode.INVALID_TRANSITION;
-			return new DomainException(code, prefix + ", que é um estado final.");
+			return Eligibility.denied(code, prefix + ", que é um estado final.");
 		}
 		if (action == EDIT) {
-			return new DomainException(ErrorCode.NOT_EDITABLE, prefix + "; só é possível editar em DRAFT ou CHANGES_REQUESTED.");
+			return Eligibility.denied(ErrorCode.NOT_EDITABLE, prefix + "; só é possível editar em DRAFT ou CHANGES_REQUESTED.");
 		}
 		var allowed = availableActions(from).stream().map(Action::verb).collect(Collectors.joining(", "));
-		return new DomainException(ErrorCode.INVALID_TRANSITION, prefix + ". Ações possíveis nesse estado: " + allowed + ".");
+		return Eligibility.denied(ErrorCode.INVALID_TRANSITION, prefix + ". Ações possíveis nesse estado: " + allowed + ".");
 	}
 
 }
