@@ -124,3 +124,49 @@ One block per agent turn, one row per changed file:
 | `backend/src/main/java/dev/challenge/purchase/domain/request/RequestStateMachine.java` | modified | +2 | -4 |
 | `backend/src/test/java/dev/challenge/purchase/domain/approval/ApprovalEligibilityPolicyTest.java` | modified | +2 | -4 |
 | `backend/src/test/java/dev/challenge/purchase/domain/request/RequestStateMachineTest.java` | modified | +2 | -4 |
+
+---
+### Turn 2026-11-18 09:04:57 -0300 · ClaudeCode
+- **Source**: command
+- **Session**: n/a
+- **Prompt**: n/a
+- **Summary**: Phase 3: Flyway schema with append-only history and immutable-version triggers, JPA entities, repositories with atomic budget updates, mappers, Testcontainers persistence tests and ADR 002
+
+| File | Change | Additions | Removals |
+|---|---|---|---|
+| `backend/src/main/java/dev/challenge/purchase/domain/approval/StepStatus.java` | created | +11 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/request/LineItem.java` | created | +33 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/request/RequestEventType.java` | created | +23 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/budget/MonthlyBudgetEntity.java` | created | +79 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/budget/MonthlyBudgetRepository.java` | created | +65 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/converter/CompetenceMonthConverter.java` | created | +26 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/converter/MoneyConverter.java` | created | +25 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/costcenter/CostCenterEntity.java` | created | +54 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/costcenter/CostCenterRepository.java` | created | +13 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/history/RequestEventEntity.java` | created | +133 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/history/RequestEventRepository.java` | created | +11 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/idempotency/IdempotencyKeyEntity.java` | created | +89 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/idempotency/IdempotencyKeyRepository.java` | created | +11 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/request/ApprovalContextMapper.java` | created | +28 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/request/ApprovalStepEntity.java` | created | +109 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/request/PurchaseRequestEntity.java` | created | +164 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/request/PurchaseRequestRepository.java` | created | +8 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/request/RequestItemEntity.java` | created | +82 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/request/RequestVersionEntity.java` | created | +211 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/user/ActorMapper.java` | created | +17 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/user/UserEntity.java` | created | +111 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/infrastructure/persistence/user/UserRepository.java` | created | +13 | -0 |
+| `backend/src/main/resources/db/migration/V1__create_users_cost_centers_and_budgets.sql` | created | +49 | -0 |
+| `backend/src/main/resources/db/migration/V2__create_purchase_requests.sql` | created | +120 | -0 |
+| `backend/src/main/resources/db/migration/V3__create_request_event.sql` | created | +39 | -0 |
+| `backend/src/main/resources/db/migration/V4__create_idempotency_key.sql` | created | +16 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/TestcontainersConfiguration.java` | modified | +1 | -1 |
+| `backend/src/test/java/dev/challenge/purchase/domain/request/LineItemTest.java` | created | +45 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/domain/request/RequestEventTypeTest.java` | created | +16 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/persistence/DatabaseGuaranteesTest.java` | created | +193 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/persistence/PersistenceIntegrationTest.java` | created | +87 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/persistence/budget/MonthlyBudgetRepositoryTest.java` | created | +97 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/persistence/request/PurchaseRequestRepositoryTest.java` | created | +179 | -0 |
+| `docs/adr/002-versions-and-history.md` | created | +59 | -0 |
+| `docs/adr/005-layered-architecture.md` | modified | +1 | -1 |
+| `docs/adr/README.md` | modified | +1 | -1 |
