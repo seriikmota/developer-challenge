@@ -1,0 +1,184 @@
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  // light theme everywhere: Material resolves its light-dark() tokens from the color-scheme of html
+  color-scheme: light;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+  height: 100%;
+}
+/* You can add global styles to this file, and also import other style files */
+
+h1 {
+  font: var(--mat-sys-headline-small);
+  margin: 0 0 4px;
+}
+
+h2 {
+  font: var(--mat-sys-title-large);
+  margin: 24px 0 12px;
+}
+
+a {
+  color: var(--mat-sys-primary);
+}
+
+.full-width {
+  width: 100%;
+}
+
+.subtitle,
+.muted {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.subtitle {
+  margin: 0 0 16px;
+}
+
+.page-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin: 8px 0 16px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 12px;
+}
+
+.numeric {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 48px 16px;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.state mat-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+}
+
+.state-error {
+  color: var(--mat-sys-error);
+}
+
+.form-error {
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: var(--mat-sys-on-error-container);
+  background: var(--mat-sys-error-container);
+}
+
+.form-error p {
+  margin: 0 0 4px;
+}
+
+button.danger {
+  --mat-button-outlined-label-text-color: var(--mat-sys-error);
+}
+
+.snack-error {
+  --mat-snack-bar-container-color: var(--mat-sys-error-container);
+  --mat-snack-bar-supporting-text-color: var(--mat-sys-on-error-container);
+}
+
+.status-chip {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  background: #eceff1;
+  color: #37474f;
+}
+
+.status-PENDING_APPROVAL {
+  background: #e3f2fd;
+  color: #0d47a1;
+}
+
+.status-CHANGES_REQUESTED {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.status-APPROVED {
+  background: #e8f5e9;
+  color: #1b5e20;
+}
+
+.status-REJECTED {
+  background: #ffebee;
+  color: #b71c1c;
+}
+
+.status-CANCELLED {
+  background: #f5f5f5;
+  color: #616161;
+}
+
+.status-border-DRAFT {
+  --status-color: #90a4ae;
+}
+.status-border-PENDING_APPROVAL {
+  --status-color: #1e88e5;
+}
+.status-border-CHANGES_REQUESTED {
+  --status-color: #fb8c00;
+}
+.status-border-APPROVED {
+  --status-color: #43a047;
+}
+.status-border-REJECTED {
+  --status-color: #e53935;
+}
+.status-border-CANCELLED {
+  --status-color: #bdbdbd;
+}

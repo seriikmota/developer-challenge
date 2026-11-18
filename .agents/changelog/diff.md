@@ -299,3 +299,122 @@ One block per agent turn, one row per changed file:
 | `backend/src/main/resources/db/seed/R__seed_demo_data.sql` | created | +291 | -0 |
 | `backend/src/test/java/dev/challenge/purchase/IntegrationTest.java` | modified | +2 | -2 |
 | `backend/src/test/java/dev/challenge/purchase/SeedDataTest.java` | created | +137 | -0 |
+
+---
+### Turn 2026-11-18 14:02:17 -0300 · ClaudeCode
+- **Source**: command
+- **Session**: 92da3de5-81c0-495f-b50f-a93d5b8b13f4
+- **Prompt**: Para a fase 8 use o angular 21, continue a implementação
+- **Summary**: Phase 8: Angular 21 front-end (login, dashboard, URL-driven request list, dynamic item form, detail with chain/versions/history and allowedActions, inbox), interceptors for 401/409/422/400, Vitest tests, nginx Dockerfile and README
+
+| File | Change | Additions | Removals |
+|---|---|---|---|
+| `frontend/.dockerignore` | created | +7 | -0 |
+| `frontend/.editorconfig` | created | +17 | -0 |
+| `frontend/.gitignore` | created | +44 | -0 |
+| `frontend/.prettierrc` | created | +12 | -0 |
+| `frontend/.vscode/extensions.json` | created | +4 | -0 |
+| `frontend/.vscode/launch.json` | created | +20 | -0 |
+| `frontend/.vscode/tasks.json` | created | +42 | -0 |
+| `frontend/Dockerfile` | created | +17 | -0 |
+| `frontend/README.md` | created | +98 | -0 |
+| `frontend/angular.json` | created | +93 | -0 |
+| `frontend/eslint.config.js` | created | +41 | -0 |
+| `frontend/nginx/default.conf.template` | created | +34 | -0 |
+| `frontend/package-lock.json` | created | +10862 | -0 |
+| `frontend/package.json` | created | +44 | -0 |
+| `frontend/proxy.conf.json` | created | +8 | -0 |
+| `frontend/public/favicon.ico` | created (binary) | n/a | n/a |
+| `frontend/src/app/app.config.ts` | created | +30 | -0 |
+| `frontend/src/app/app.routes.ts` | created | +57 | -0 |
+| `frontend/src/app/app.ts` | created | +10 | -0 |
+| `frontend/src/app/core/api/api.service.ts` | created | +124 | -0 |
+| `frontend/src/app/core/api/models.ts` | created | +192 | -0 |
+| `frontend/src/app/core/auth/auth.guard.ts` | created | +25 | -0 |
+| `frontend/src/app/core/auth/auth.service.ts` | created | +79 | -0 |
+| `frontend/src/app/core/http/http-tokens.ts` | created | +10 | -0 |
+| `frontend/src/app/core/http/interceptors.spec.ts` | created | +88 | -0 |
+| `frontend/src/app/core/http/interceptors.ts` | created | +47 | -0 |
+| `frontend/src/app/core/http/notifier.service.ts` | created | +15 | -0 |
+| `frontend/src/app/core/http/problem.ts` | created | +64 | -0 |
+| `frontend/src/app/features/approvals/inbox.page.ts` | created | +115 | -0 |
+| `frontend/src/app/features/auth/login.page.ts` | created | +128 | -0 |
+| `frontend/src/app/features/dashboard/dashboard.page.ts` | created | +182 | -0 |
+| `frontend/src/app/features/requests/request-detail.page.spec.ts` | created | +110 | -0 |
+| `frontend/src/app/features/requests/request-detail.page.ts` | created | +526 | -0 |
+| `frontend/src/app/features/requests/request-form.page.spec.ts` | created | +91 | -0 |
+| `frontend/src/app/features/requests/request-form.page.ts` | created | +509 | -0 |
+| `frontend/src/app/features/requests/request-list.page.ts` | created | +341 | -0 |
+| `frontend/src/app/layout/shell.ts` | created | +104 | -0 |
+| `frontend/src/app/shared/comment-dialog.ts` | created | +85 | -0 |
+| `frontend/src/app/shared/labels.ts` | created | +72 | -0 |
+| `frontend/src/app/shared/money.pipe.ts` | created | +19 | -0 |
+| `frontend/src/app/shared/page-state.ts` | created | +44 | -0 |
+| `frontend/src/app/shared/paginator-intl.ts` | created | +20 | -0 |
+| `frontend/src/app/shared/request-actions.spec.ts` | created | +49 | -0 |
+| `frontend/src/app/shared/request-actions.ts` | created | +64 | -0 |
+| `frontend/src/app/shared/server-errors.ts` | created | +26 | -0 |
+| `frontend/src/app/shared/status-chip.ts` | created | +15 | -0 |
+| `frontend/src/index.html` | created | +20 | -0 |
+| `frontend/src/main.ts` | created | +5 | -0 |
+| `frontend/src/styles.scss` | created | +182 | -0 |
+| `frontend/tsconfig.app.json` | created | +15 | -0 |
+| `frontend/tsconfig.json` | created | +33 | -0 |
+| `frontend/tsconfig.spec.json` | created | +15 | -0 |
+
+---
+### Turn 2026-11-18 14:18:47 -0300 · ClaudeCode
+- **Source**: command
+- **Session**: 92da3de5-81c0-495f-b50f-a93d5b8b13f4
+- **Prompt**: Pronto configurei o claude code no navegador
+- **Summary**: Phase 8 browser check: force light color-scheme on html, status card borders via CSS variable, search field label without overlapping placeholder
+
+| File | Change | Additions | Removals |
+|---|---|---|---|
+| `frontend/src/app/features/dashboard/dashboard.page.ts` | modified | +1 | -1 |
+| `frontend/src/app/features/requests/request-list.page.ts` | modified | +2 | -2 |
+| `frontend/src/styles.scss` | modified | +8 | -6 |
+
+---
+### Turn 2026-11-18 14:24:45 -0300 · ClaudeCode
+- **Source**: command
+- **Session**: 92da3de5-81c0-495f-b50f-a93d5b8b13f4
+- **Prompt**: Alguns dados nas mensagens de erro estão mal formatados, igual em: "Não é possível aprovar: o centro de custo MKT tem R$ 200,00 disponíveis em 2026-11; a solicitação exige R$ 900,00.", a data ficou mal formatada, sempre use o padrão de dd/MM/yyyy, dd/MM/yyyy HH:mm, dd/MM/yyyy HH:mm:ss, apenas para exibição de data para o usuario
+- **Summary**: User-facing dates: months as MM/yyyy and dates as dd/MM/yyyy in API messages; explicit dd/MM/yyyy [HH:mm] patterns and month pipe in the front-end, with tests
+
+| File | Change | Additions | Removals |
+|---|---|---|---|
+| `backend/src/main/java/dev/challenge/purchase/application/costcenter/CostCenterService.java` | modified | +1 | -1 |
+| `backend/src/main/java/dev/challenge/purchase/application/request/RequestService.java` | modified | +7 | -1 |
+| `backend/src/main/java/dev/challenge/purchase/application/request/RequestWorkflowService.java` | modified | +1 | -1 |
+| `backend/src/main/java/dev/challenge/purchase/domain/budget/CompetenceMonth.java` | modified | +10 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/domain/budget/CompetenceMonthTest.java` | modified | +6 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/web/admin/AdminApiTest.java` | modified | +1 | -1 |
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/web/error/ErrorProbeController.java` | modified | +1 | -1 |
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/web/error/ProblemDetailAdviceTest.java` | modified | +1 | -1 |
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/web/request/RequestLifecycleApiTest.java` | modified | +6 | -2 |
+| `frontend/src/app/features/approvals/inbox.page.ts` | modified | +3 | -1 |
+| `frontend/src/app/features/dashboard/dashboard.page.ts` | modified | +3 | -10 |
+| `frontend/src/app/features/requests/request-detail.page.ts` | modified | +11 | -8 |
+| `frontend/src/app/features/requests/request-list.page.ts` | modified | +4 | -2 |
+| `frontend/src/app/shared/date-formats.spec.ts` | created | +21 | -0 |
+| `frontend/src/app/shared/date-formats.ts` | created | +22 | -0 |
+
+---
+### Turn 2026-11-18 14:36:17 -0300 · ClaudeCode
+- **Source**: command
+- **Session**: 92da3de5-81c0-495f-b50f-a93d5b8b13f4
+- **Prompt**: Abre o projeto no navegador e navegue pelo sistema validando as regras de negocio até o momento e o design da tela, verificando se tem algo quebrado
+- **Summary**: Browser walkthrough fixes: comment dialog Voltar no longer confirms the action (regression tests), mobile toolbar/detail/form layout, dynamic error subscripts, search label, login scroll, clearer success toasts
+
+| File | Change | Additions | Removals |
+|---|---|---|---|
+| `frontend/src/app/app.config.ts` | modified | +4 | -1 |
+| `frontend/src/app/features/auth/login.page.ts` | modified | +1 | -0 |
+| `frontend/src/app/features/dashboard/dashboard.page.ts` | modified | +2 | -2 |
+| `frontend/src/app/features/requests/request-detail.page.ts` | modified | +50 | -26 |
+| `frontend/src/app/features/requests/request-form.page.ts` | modified | +6 | -0 |
+| `frontend/src/app/features/requests/request-list.page.ts` | modified | +2 | -2 |
+| `frontend/src/app/layout/shell.ts` | modified | +30 | -1 |
+| `frontend/src/app/shared/comment-dialog.spec.ts` | created | +57 | -0 |
+| `frontend/src/app/shared/comment-dialog.ts` | modified | +10 | -2 |
