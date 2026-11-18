@@ -269,3 +269,15 @@ One block per agent turn, one row per changed file:
 | `docs/adr/003-forbidden-vs-not-found.md` | created | +49 | -0 |
 | `docs/adr/006-idempotency.md` | created | +44 | -0 |
 | `docs/adr/README.md` | modified | +3 | -3 |
+
+---
+### Turn 2026-11-18 11:42:56 -0300 · ClaudeCode
+- **Source**: command
+- **Session**: n/a
+- **Prompt**: n/a
+- **Summary**: Phase 6: full three-step approval flow, append-only history check and real concurrency tests (same-step approvals, shared budget, idempotency key race)
+
+| File | Change | Additions | Removals |
+|---|---|---|---|
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/web/request/ConcurrencyApiTest.java` | created | +198 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/infrastructure/web/request/FullApprovalFlowApiTest.java` | created | +97 | -0 |
