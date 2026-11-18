@@ -432,3 +432,16 @@ One block per agent turn, one row per changed file:
 | `.github/workflows/ci.yml` | modified | +56 | -0 |
 | `docker-compose.yml` | modified | +37 | -1 |
 | `frontend/.gitattributes` | created | +3 | -0 |
+
+---
+### Turn 2026-11-18 15:19:29 -0300 · ClaudeCode
+- **Source**: command
+- **Session**: 92da3de5-81c0-495f-b50f-a93d5b8b13f4
+- **Prompt**: pode seguir para a fase 10
+- **Summary**: Phase 10: SOLUTION.md (how to run, seed users, architecture, decisions and trade-offs, scope left out) and ADR 001/005 updates
+
+| File | Change | Additions | Removals |
+|---|---|---|---|
+| `SOLUTION.md` | created | +182 | -0 |
+| `docs/adr/001-concurrency-strategy.md` | modified | +1 | -1 |
+| `docs/adr/005-layered-architecture.md` | modified | +1 | -0 |

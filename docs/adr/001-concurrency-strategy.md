@@ -52,7 +52,7 @@ Cada caso de uso de escrita é um único `@Transactional`: a mudança na solicit
 - O cliente tem um protocolo simples: enviar o `lockVersion` recebido por último. O `409` sempre significa "recarregue e tente de novo".
 - A trava da linha da solicitação dura só a transação (milissegundos) e afeta apenas escritas na **mesma** solicitação. Leituras não esperam.
 - O saldo nunca fica negativo, sem lock de tabela nem nível de isolamento `SERIALIZABLE`.
-- Os testes de concorrência (fase 6) disparam requisições simultâneas reais contra o PostgreSQL para provar os dois cenários.
+- `ConcurrencyApiTest` dispara requisições simultâneas reais contra o PostgreSQL (`ExecutorService` + `CountDownLatch`, cada cenário repetido 3 vezes) e prova os dois cenários: na mesma etapa, exatamente um `200` e um `409`; com o saldo disputado, o consumo nunca passa do orçado e as aprovações que não cabem recebem `422 BUDGET_EXCEEDED`.
 
 ## Alternativas consideradas
 

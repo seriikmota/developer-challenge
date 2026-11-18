@@ -19,6 +19,7 @@ infrastructure  ->  application  ->  domain
 
 - **`domain`**: Java puro, sem Spring, JPA ou Jackson. Contém:
   - `request/RequestStateMachine`: transições de status (tabela 4.2 do enunciado);
+  - `request/RequestActionPolicy`: combina estado, dono e elegibilidade; é a fonte única de `allowedActions`;
   - `approval/ApprovalChainFactory`: etapas por valor e categoria;
   - `approval/ApprovalEligibilityPolicy`: nível, centro de custo e segregação de funções;
   - `approval/DecisionCommentRule`: comentário obrigatório;
