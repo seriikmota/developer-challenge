@@ -1,3 +1,9 @@
+# Full stack: database, API and web app. `docker compose up --build` runs the migrations and the demo seed
+# with no manual step. Every value has a default, so a .env file is optional (see .env.example).
+#
+#   web app:  http://localhost:4200        (nginx; /api is proxied to the back-end)
+#   API:      http://localhost:8080        (Swagger UI at /swagger-ui, health at /health)
+
 services:
   postgres:
     image: postgres:17-alpine
@@ -7,7 +13,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-purchase}
       TZ: UTC
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      # published only on this machine, for running the back-end outside Docker
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
@@ -15,6 +22,35 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+
+  backend:
+    build: ./backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # inside the compose network the database is reached by its service name
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-purchase}
+      DB_USERNAME: ${POSTGRES_USER:-purchase}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-purchase}
+      FLYWAY_LOCATIONS: ${FLYWAY_LOCATIONS:-classpath:db/migration,classpath:db/seed}
+      JWT_SECRET: ${JWT_SECRET:-}
+      JWT_TTL: ${JWT_TTL:-PT15M}
+      LOG_FORMAT: ${LOG_FORMAT:-ecs}
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      BACKEND_URL: http://backend:8080
+    ports:
+      - "${FRONTEND_PORT:-4200}:80"
+    restart: unless-stopped
 
 volumes:
   postgres-data:

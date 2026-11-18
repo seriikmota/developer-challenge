@@ -418,3 +418,17 @@ One block per agent turn, one row per changed file:
 | `frontend/src/app/layout/shell.ts` | modified | +30 | -1 |
 | `frontend/src/app/shared/comment-dialog.spec.ts` | created | +57 | -0 |
 | `frontend/src/app/shared/comment-dialog.ts` | modified | +10 | -2 |
+
+---
+### Turn 2026-11-18 14:43:05 -0300 · ClaudeCode
+- **Source**: command
+- **Session**: n/a
+- **Prompt**: n/a
+- **Summary**: Phase 9: full docker compose (postgres, backend, frontend with healthchecks and defaults, DB bound to localhost), CI jobs for frontend and compose smoke test, LF line endings for frontend
+
+| File | Change | Additions | Removals |
+|---|---|---|---|
+| `.env.example` | modified | +7 | -1 |
+| `.github/workflows/ci.yml` | modified | +56 | -0 |
+| `docker-compose.yml` | modified | +37 | -1 |
+| `frontend/.gitattributes` | created | +3 | -0 |
