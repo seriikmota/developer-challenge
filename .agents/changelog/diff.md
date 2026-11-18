@@ -71,3 +71,56 @@ One block per agent turn, one row per changed file:
 | File | Change | Additions | Removals |
 |---|---|---|---|
 | `backend/mvnw` | modified | +0 | -0 |
+
+---
+### Turn 2026-11-17 19:29:33 -0300 · ClaudeCode
+- **Source**: command
+- **Session**: 92da3de5-81c0-495f-b50f-a93d5b8b13f4
+- **Prompt**: Pode começar
+- **Summary**: Phase 2 pure domain: Money, CompetenceMonth, enums, DomainException, ApprovalChainFactory, ApprovalEligibilityPolicy, DecisionCommentRule, RequestStateMachine with parameterized tests, ArchUnit rule, ADRs 004 and 005
+
+| File | Change | Additions | Removals |
+|---|---|---|---|
+| `backend/src/main/java/dev/challenge/purchase/domain/approval/ApprovalChainFactory.java` | created | +44 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/approval/ApprovalContext.java` | created | +23 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/approval/ApprovalEligibilityPolicy.java` | created | +89 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/approval/DecisionCommentRule.java` | created | +30 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/approval/Eligibility.java` | created | +28 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/approval/StepApproval.java` | created | +15 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/approval/StepLevel.java` | created | +10 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/budget/CompetenceMonth.java` | created | +46 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/budget/Money.java` | created | +82 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/error/DomainException.java` | created | +21 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/error/ErrorCode.java` | created | +16 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/request/Action.java` | created | +33 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/request/Category.java` | created | +10 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/request/RequestStateMachine.java` | created | +96 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/request/RequestStatus.java` | created | +14 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/user/Actor.java` | created | +24 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/user/ApproverLevel.java` | created | +6 | -0 |
+| `backend/src/main/java/dev/challenge/purchase/domain/user/Role.java` | created | +15 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/architecture/DomainArchitectureTest.java` | created | +34 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/domain/approval/ApprovalChainFactoryTest.java` | created | +58 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/domain/approval/ApprovalEligibilityPolicyTest.java` | created | +170 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/domain/approval/DecisionCommentRuleTest.java` | created | +44 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/domain/budget/CompetenceMonthTest.java` | created | +40 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/domain/budget/MoneyTest.java` | created | +76 | -0 |
+| `backend/src/test/java/dev/challenge/purchase/domain/request/RequestStateMachineTest.java` | created | +121 | -0 |
+| `docs/adr/004-monetary-representation.md` | created | +32 | -0 |
+| `docs/adr/005-layered-architecture.md` | created | +46 | -0 |
+| `docs/adr/README.md` | modified | +2 | -2 |
+
+---
+### Turn 2026-11-17 19:37:41 -0300 · ClaudeCode
+- **Source**: command
+- **Session**: 92da3de5-81c0-495f-b50f-a93d5b8b13f4
+- **Prompt**: Faça um ajuste, em casos de mensagem muito grande, tente colocar apenas em uma linha o codigo, exemplo ruim: <pasted_content id="4762"> return Eligibility.denied(ErrorCode.DUPLICATE_APPROVER, prefix + "você já aprovou a etapa " + previous.get().level() + " desta versão (segregação de funções)."); </pasted_content id="4762">
+- **Summary**: Put long user-facing message statements on a single line in domain code and tests
+
+| File | Change | Additions | Removals |
+|---|---|---|---|
+| `backend/src/main/java/dev/challenge/purchase/domain/approval/ApprovalEligibilityPolicy.java` | modified | +7 | -17 |
+| `backend/src/main/java/dev/challenge/purchase/domain/approval/DecisionCommentRule.java` | modified | +1 | -3 |
+| `backend/src/main/java/dev/challenge/purchase/domain/request/RequestStateMachine.java` | modified | +2 | -4 |
+| `backend/src/test/java/dev/challenge/purchase/domain/approval/ApprovalEligibilityPolicyTest.java` | modified | +2 | -4 |
+| `backend/src/test/java/dev/challenge/purchase/domain/request/RequestStateMachineTest.java` | modified | +2 | -4 |
