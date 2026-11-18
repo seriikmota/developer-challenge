@@ -1,7 +1,8 @@
 # syntax=docker/dockerfile:1
 
 # ---- build: installs exactly the locked dependencies and builds the production bundle ----
-FROM node:24-alpine AS build
+# Runs on the machine that builds ($BUILDPLATFORM): the bundle is static files, the same for any architecture.
+FROM --platform=$BUILDPLATFORM node:24-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN --mount=type=cache,target=/root/.npm npm ci --no-audit --no-fund

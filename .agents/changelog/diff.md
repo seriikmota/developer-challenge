@@ -471,3 +471,36 @@ One block per agent turn, one row per changed file:
 | File | Change | Additions | Removals |
 |---|---|---|---|
 | `SOLUTION.md` | modified | +26 | -1 |
+
+---
+### Turn 2026-11-18 16:46:48 -0300 · ClaudeCode
+- **Source**: command
+- **Session**: 92da3de5-81c0-495f-b50f-a93d5b8b13f4
+- **Prompt**: pode realizar a criação desses arquivos, sem commitar por enquanto
+- **Summary**: Continuous deployment: release workflow (arm64 images to GHCR after green CI on push), deploy workflow on self-hosted runner, deploy.sh with backup and automatic rollback, docker-compose.prod.yml with Cloudflare tunnel profile, BUILDPLATFORM build stages, longer backend health grace, docs/deploy.md
+
+| File | Change | Additions | Removals |
+|---|---|---|---|
+| `.env.example` | modified | +15 | -0 |
+| `.github/workflows/deploy.yml` | created | +56 | -0 |
+| `.github/workflows/release.yml` | created | +72 | -0 |
+| `backend/Dockerfile` | modified | +5 | -2 |
+| `deploy.sh` | created | +105 | -0 |
+| `docker-compose.prod.yml` | created | +83 | -0 |
+| `docs/deploy.md` | created | +73 | -0 |
+| `frontend/Dockerfile` | modified | +2 | -1 |
+
+---
+### Turn 2026-11-18 17:09:46 -0300 · ClaudeCode
+- **Source**: command
+- **Session**: 92da3de5-81c0-495f-b50f-a93d5b8b13f4
+- **Prompt**: Adapte para a opção 1
+- **Summary**: Deploy over SSH from GitHub-hosted runners: release/deploy as reusable workflows called by ci.yml on push to teste-pleno, production environment secrets, optional Cloudflare Access SSH, push runs no longer cancelled, guide rewritten
+
+| File | Change | Additions | Removals |
+|---|---|---|---|
+| `.github/workflows/ci.yml` | modified | +28 | -1 |
+| `.github/workflows/deploy.yml` | modified | +126 | -28 |
+| `.github/workflows/release.yml` | modified | +11 | -19 |
+| `docker-compose.prod.yml` | modified | +3 | -0 |
+| `docs/deploy.md` | modified | +95 | -37 |
