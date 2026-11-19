@@ -336,7 +336,7 @@ class RequestLifecycleApiTest extends ApiTestSupport {
 				""")
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.errors[*].field", containsInAnyOrder("title", "items[0].quantity", "items[0].unitPrice")));
-		createRequest(owner, body("Data passada", "OTHER", 1, "10.00").replace(LocalDate.now().plusDays(30).toString(), LocalDate.now().toString()))
+		createRequest(owner, body("Data passada", "OTHER", 1, "10.00").replace(LocalDate.now().plusDays(30).toString(), LocalDate.now(CompetenceMonth.ZONE).toString()))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.errors[0].field").value("neededBy"))
 				.andExpect(jsonPath("$.errors[0].message").value(endsWith("(depois de " + LocalDate.now(CompetenceMonth.ZONE).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + ")")));
